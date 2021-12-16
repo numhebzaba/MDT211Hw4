@@ -44,14 +44,20 @@ namespace MDt211Hw4
             }
             return min_index;
         }
-        static void printSolution(int[] distance, int arraySize)
+        static void printSolution(int[] distance, int arraySize, string goalTown, Node[,] graph)
         {
-            Console.Write("Order of node     Distance "
-                          + "from root node\n");
+            Console.Write("Distance to Goal Town : ");
             for (int i = 0; i < arraySize; i++)
-                Console.Write(i + " \t\t\t\t " + distance[i] + "\n");
+            {
+
+                if (graph[i, 0].Name == goalTown)
+                {
+                    Console.WriteLine(distance[i]);
+                }
+
+            }
         }
-        static void dijkstraalgorithm(Node[,] graph, int rootNode, int arraySize)
+        static void dijkstraalgorithm(Node[,] graph, int rootNode, int arraySize,string goalTown)
         {
             int[] distance= new int[arraySize]; 
             bool[] ShortestPath = new bool[arraySize];
@@ -81,16 +87,16 @@ namespace MDt211Hw4
             }
 
             
-            printSolution(distance, arraySize);
+            printSolution(distance, arraySize,goalTown, graph);
         }
         static void Main(string[] args)
         {
-            Console.Write("Number of Nodes : ");
+            Console.Write("Number of Towns : ");
             int NumberOfNodes = int.Parse(Console.ReadLine());
 
             Node [,] NodeArray = new Node[NumberOfNodes, NumberOfNodes];
 
-            Console.WriteLine("Name of each node");
+            Console.WriteLine("Name of each town");
             for (int i = 0; i < NumberOfNodes; i++) 
             {
                 string NodeName = Console.ReadLine();
@@ -99,20 +105,23 @@ namespace MDt211Hw4
 
             }
 
-            Console.WriteLine("The distance of each pair of nodes,if the two nodes are linked");
-            Console.WriteLine("Ps.type \"0\" for the two nodes are not linked");
+            Console.WriteLine("The distance of each pair of towns,if the two towns are linked");
+            Console.WriteLine("Ps.type \"-1\" for the two nodes are not linked");
             Console.WriteLine(NodeArray[0,0].Name);
 
             for (int i = 0; i < NumberOfNodes; i++)
             {
-                for (int j = 0; j < NumberOfNodes; j++)
+                for (int j = 0; j <= i; j++)
                 {
                     Console.WriteLine("{0} and {1}",NodeArray[i,0].Name,NodeArray[0,j].Name);
-                    // ลองใส่แค่ 3 array สามหลี่ยมล่างแล้ว error ไม่หาค่า min
-                    NodeArray[i, j].Distance = int.Parse(Console.ReadLine());
+
+                    NodeArray[i, j].Distance = int.Parse(Console.ReadLine()); // สามเหลี่ยมล่าง
+                    NodeArray[j, i].Distance = NodeArray[i, j].Distance;      // สามเหลี่ยมบน
+
                 }
             }
-            dijkstraalgorithm(NodeArray,0,NumberOfNodes); // 0 ลำดับของ root node
+            string goalTown = Console.ReadLine();
+            dijkstraalgorithm(NodeArray,0,NumberOfNodes,goalTown); // 0 ลำดับของ root node
 
              //ref https://www.geeksforgeeks.org/csharp-program-for-dijkstras-shortest-path-algorithm-greedy-algo-7/
         }
